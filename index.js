@@ -11,8 +11,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Routes
-// app.use('/pods', pods);
-// app.use('/categories', categories);
+app.use('/messages', messages);
 
 app.listen(port, () => {
   console.log('Listening on port: ', port);

@@ -13,8 +13,8 @@ const messages = {
   createMessage: async(userId, topicId, messageText) => {
     try {
       return await db.one('INSERT INTO topic_message(message_text, topic_id, author_id) ' +
-          'VALUES(${messageText, topicId, userId}) ' +
-          'RETURNING id, messageText', 
+          'VALUES(${messageText}, ${topicId}, ${userId}) ' +
+          'RETURNING id, message_text', 
         {
           messageText: messageText,
           topicId: topicId,
@@ -28,7 +28,7 @@ const messages = {
   // Return the last 200 messages for a specific topic
   getMessageHistoryForTopic: async(topicId) => {
     try {
-      return await db.many('SELECT * FROM topic_message WHERE topic_id = ${topicId} ORDER BY create_date');
+      return await db.any('SELECT * FROM topic_message WHERE topic_id = ${topicId} ORDER BY create_date',  { topicId: topicId });
     } catch (e) {
       console.log(e);
     }
