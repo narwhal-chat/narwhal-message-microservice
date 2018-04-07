@@ -33,31 +33,6 @@ const messages = {
       console.log(e);
     }
   }
-
-  // createTopic: async (newTopic) => {
-  //   try {
-  //     const topic = await db.one('INSERT INTO topic(name, pod_id, author_id) ' +
-  //         'VALUES(${name}, ${podId}, ${authorId}) ' +
-  //         'RETURNING id, name', 
-  //       {
-  //         name: newTopic.name,
-  //         podId: newTopic.podId,
-  //         authorId: newTopic.userId
-  //       });
-  //     return topic;
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // },
-  
-  // getPodsForUser: async (userId) => {
-  //   try {
-  //     const pods = await db.any('SELECT p.* FROM pod_user pu, pod p WHERE pu.pod_id = p.id AND pu.user_id = ${userId}', { userId: userId });
-  //     return pods;
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }
 };
 
 module.exports = {
