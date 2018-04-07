@@ -28,7 +28,7 @@ const messages = {
   // Return the last 200 messages for a specific topic
   getMessageHistoryForTopic: async(topicId) => {
     try {
-      return await db.any('SELECT * FROM topic_message WHERE topic_id = ${topicId} ORDER BY create_date',  { topicId: topicId });
+      return await db.any('SELECT * FROM topic_message WHERE topic_id = ${topicId} ORDER BY create_date LIMIT 200',  { topicId: topicId });
     } catch (e) {
       console.log(e);
     }
