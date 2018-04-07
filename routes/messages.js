@@ -5,7 +5,6 @@ const db = require('../db/queries');
 
 router.post('/new-message', async (req, res, next) => {
   try {
-    console.log(req.body);
     const results = await db.messages.createMessage(req.body.userId, req.body.topicId, req.body.messageText);
     res.json(results);
   } catch (e) {
