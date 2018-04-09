@@ -9,7 +9,7 @@ const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/
 const db = pgp(connectionString);
 
 const messages = {
-  // Add a message to a specific topic
+  // Add a message to a topic
   createMessage: async(userId, topicId, messageText) => {
     try {
       return await db.one('INSERT INTO topic_message(message_text, topic_id, author_id) ' +
@@ -25,7 +25,7 @@ const messages = {
     }
   },
 
-  // Return the last 200 messages for a specific topic
+  // Return the last 200 messages for a topic
   getMessageHistoryForTopic: async(topicId) => {
     try {
       return await db.any('SELECT * FROM topic_message WHERE topic_id = ${topicId} ORDER BY create_date LIMIT 200',  { topicId: topicId });
