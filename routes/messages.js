@@ -15,7 +15,6 @@ router.post('/new-message', async (req, res, next) => {
 router.get('/history/:topicId', async (req, res, next) => {
   try {
     const results = await db.messages.getMessageHistoryForTopic(req.params.topicId);
-    console.log('wtf', results);
     res.json(results);
   } catch (e) {
     res.sendStatus(400);

@@ -13,8 +13,9 @@ const dbUsers = pgp(usersConnectionString);
 const messages = {
   // Add a message to a topic
   createMessage: async(userId, topicId, messageText) => {
+    console.log('og id', userId);
     try {
-      return await dbMessages.one('INSERT INTO topic_message(message_text, topic_id, author_id) ' +
+      const messageResults = await dbMessages.one('INSERT INTO topic_message(message_text, topic_id, author_id) ' +
           'VALUES(${messageText}, ${topicId}, ${userId}) ' +
           'RETURNING id, message_text, topic_id, author_id, create_date, last_update_date', 
         {
@@ -22,6 +23,16 @@ const messages = {
           topicId: topicId,
           userId: userId
         });
+
+      const user = await dbUsers.one('SELECT id, username FROM users WHERE id = ${userId}', { userId: messageResults.author_id });
+
+      const message = [];
+      if (messageResults.author_id === user.id) {
+        messageResults.username = user.username;
+        message.push(messageResults);
+      }
+
+      return message;
     } catch (e) {
       console.log(e);
     }
@@ -33,19 +44,28 @@ const messages = {
       const messageResults = await dbMessages.any('SELECT id, message_text, topic_id, author_id, create_date, last_update_date ' +
           'FROM topic_message WHERE topic_id = ${topicId} ORDER BY create_date LIMIT 200',  { topicId: topicId }
       );
+      
       const userIds = messageResults.map((message) => {
-        return [message.author_id];
+        return message.author_id;
       });
-      const users = await dbUsers.any('SELECT id, username FROM users WHERE id IN ($1)', [1, userIds]);
+      
+      // Get each unique author ID
+      const uniqueIds = [...new Set(userIds)];
+      const userResults = await dbUsers.any('SELECT id, username FROM users WHERE id IN ($1:csv)', [uniqueIds]);
+      // Convert user results to an object for faster lookup
+      const users = userResults.reduce((acc, user) => {
+        acc[user.id] = { id: user.id, username: user.username };
+        return acc;
+      }, {});
+
       const messages = [];
       for (let message of messageResults) {
-        for (let user of users) {
-          if (message.author_id = user.id) {
-            message.username = user.username;
-            messages.push(message);
-          }
+        if (message.author_id === users[message.author_id].id) {
+          message.username = users[message.author_id].username;
+          messages.push(message);
         }
       }
+      
       return messages;
     } catch (e) {
       console.log(e);
