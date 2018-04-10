@@ -13,7 +13,6 @@ const dbUsers = pgp(usersConnectionString);
 const messages = {
   // Add a message to a topic
   createMessage: async(userId, topicId, messageText) => {
-    console.log('og id', userId);
     try {
       const messageResults = await dbMessages.one('INSERT INTO topic_message(message_text, topic_id, author_id) ' +
           'VALUES(${messageText}, ${topicId}, ${userId}) ' +
@@ -24,11 +23,12 @@ const messages = {
           userId: userId
         });
 
-      const user = await dbUsers.one('SELECT id, username FROM users WHERE id = ${userId}', { userId: messageResults.author_id });
+      const user = await dbUsers.one('SELECT id, username, avatar FROM users WHERE id = ${userId}', { userId: messageResults.author_id });
 
       const message = [];
       if (messageResults.author_id === user.id) {
         messageResults.username = user.username;
+        messageResults.avatar = user.avatar;
         message.push(messageResults);
       }
 
@@ -51,10 +51,10 @@ const messages = {
       
       // Get each unique author ID
       const uniqueIds = [...new Set(userIds)];
-      const userResults = await dbUsers.any('SELECT id, username FROM users WHERE id IN ($1:csv)', [uniqueIds]);
+      const userResults = await dbUsers.any('SELECT id, username, avatar FROM users WHERE id IN ($1:csv)', [uniqueIds]);
       // Convert user results to an object for faster lookup
       const users = userResults.reduce((acc, user) => {
-        acc[user.id] = { id: user.id, username: user.username };
+        acc[user.id] = { id: user.id, username: user.username, avatar: user.avatar };
         return acc;
       }, {});
 
@@ -62,6 +62,7 @@ const messages = {
       for (let message of messageResults) {
         if (message.author_id === users[message.author_id].id) {
           message.username = users[message.author_id].username;
+          message.avatar = users[message.author_id].avatar
           messages.push(message);
         }
       }
