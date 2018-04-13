@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+- '7'
+deploy:
+  provider: heroku
+  api_key:
+    secure: m5Jut2zt7S7detUfd5CRt013Z2Qwd0Vlivs0eaY3ze/JxcE5k3MtBa7VpRLSOBiPjQnKLEwP1XpYoiJbwU7adY/QkH439mqa0hIKNRo3OOeHSIURuNGsOjF2cepq4B99MvOWeIr65g66+IdRQKNYUwljc+mgtNf0w/GciyWps/Rdw5SVdUlc0xq39G1ShdYPVOsfKzMA5cn/+U5PI+ekGSy/jprUdr1e6feaggYDkpfjbQNJmQ0eTJZhOzcXwvmpL5C8vjnH1/Mpoif8z1bvTpXL1M3dzCAu92aFzIz+pxXmLLXPhnYttUDDDLWeGPmDLE6I5UR6iU0QPrL/Qxup9ORk7rpUAZnRLUULK0UeJfOx8jIl0FVHKJuo0wSWog4cgPNAfPzn6eCN8b7OnlzvW8UOrIbzuKpSy46WwcbfcLwiwo6FfCZhtbCLWQgrpMPKfkA6lLfwsxPSKFOiB1tkrcqqvGwm0K5kC0zMLPbBeGzZiOt7uMXGYoOuYYlmVme/LJlt58XijSqpxomYKANlyz/Nj3Km2iN7YrdWXLZOPBUwH7456pNyBA+UTHDzrmTXpMRcf2hjUc5VKXAy2YVS2qI4znD6YfBzMplWFyOylrIRxcTvZ8De4vSwap5WV2PlCQuk7bQ3/EfJomiDZr8qHiK2wBwW4kv2o3GtAHUoMvc=
+  app: narwhal-message-microservice
+  on:
+    repo: narwhal-chat/narwhal-message-microservice
