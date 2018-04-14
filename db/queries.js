@@ -14,8 +14,8 @@ const messages = {
   // Add a message to a topic
   createMessage: async(userId, topicId, messageText) => {
     try {
-      const messageResults = await dbMessages.one('INSERT INTO topic_message(message_text, topic_id, author_id) ' +
-          'VALUES(${messageText}, ${topicId}, ${userId}) ' +
+      const messageResults = await dbMessages.one('INSERT INTO topic_message(message_text, message_text_tokens, topic_id, author_id) ' +
+          'VALUES(${messageText}, to_tsvector(${messageText}), ${topicId}, ${userId}) ' +
           'RETURNING id, message_text, topic_id, author_id, create_date, last_update_date', 
         {
           messageText: messageText,
